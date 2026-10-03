@@ -1,4 +1,4 @@
-﻿import { musicTracks } from "../data/music.ts";
+import { musicTracks } from "../data/music.ts";
 import type {
 	MetingMusicConfig,
 	MusicConfig,
@@ -9,53 +9,53 @@ import type {
 import { withUserConfig } from "../utils/config-overlay.ts";
 
 /**
- * 渚ф爮闊充箰閰嶇疆鍗曚竴鐪熸簮銆?
- * 閬靛惊銆岄浂棰濆璐熸媴銆嶅師鍒欙細绂佺敤鏃朵笉浜х敓浠讳綍缃戠粶璇锋眰涓庨澶?DOM銆?
+ * 侧栏音乐配置单一真源�?
+ * 遵循「零额外负担」原则：禁用时不产生任何网络请求与额�?DOM�?
  *
- * 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
- * 銆愬洓绉嶅伐浣滄ā寮忥紙Provider锛変娇鐢ㄦ寚鍗椼€?
- * 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
- * 1. "local"锛堟湰鍦扮嫭绔嬫ā寮忥紝榛樿锛夛細
- *    - 鏁版嵁婧愶細src/data/music.ts
- *    - 鐗圭偣锛氶浂澶栭儴 API 渚濊禆锛岄灞忔绉掔骇灏辩华锛岄潤鎬佹墦鍖呯洿鍑猴紝鏂綉涔熻兘姝ｅ父鎾斁銆?
- *    - 绀轰緥锛?
+ * ─────────────────────────────────────────────────────────────────────────────
+ * 【四种工作模式（Provider）使用指南�?
+ * ─────────────────────────────────────────────────────────────────────────────
+ * 1. "local"（本地独立模式，默认）：
+ *    - 数据源：src/data/music.ts
+ *    - 特点：零外部 API 依赖，首屏毫秒级就绪，静态打包直出，断网也能正常播放�?
+ *    - 示例�?
  *      provider: "local"
  *
- * 2. "custom"锛堣嚜瀹氫箟鍒楄〃妯″紡锛夛細
- *    - 鏁版嵁婧愶細鐩存帴鍦?tracks 瀛楁鏄惧紡浼犲叆鏇茬洰鏁扮粍锛堟敮鎸佸閾鹃煶棰戜笌灏侀潰锛?
- *    - 鐗圭偣锛氱伒娲昏嚜瀹氫箟锛屾棤闇€淇敼閫氱敤鏁版嵁鏂囦欢銆?
- *    - 绀轰緥锛?
+ * 2. "custom"（自定义列表模式）：
+ *    - 数据源：直接�?tracks 字段显式传入曲目数组（支持外链音频与封面�?
+ *    - 特点：灵活自定义，无需修改通用数据文件�?
+ *    - 示例�?
  *      provider: "custom",
  *      tracks: [
  *        { id: "song-1", title: "Song", artist: "Artist", source: "https://.../a.mp3", cover: "https://.../c.jpg" }
  *      ]
  *
- * 3. "meting"锛堜簯绔瓕鍗曟ā寮忥級锛?
- *    - 鏁版嵁婧愶細Meting API 杩滅姝屽崟锛堢綉鏄撲簯 / QQ闊充箰 / 閰风嫍绛夛級
- *    - 鐗圭偣锛氬鎴风寮傛鎸夐渶鎷夊彇锛屾捣閲忔洸搴撲笌灏侀潰鑷姩瑙ｆ瀽銆?
- *    - 鍙€?`preload: "metadata"`锛氱粍浠惰繘鍏ヨ鍙ｅ嵆棰勫彇姝屽崟鍏冩暟鎹紙涓嶅惈闊抽娴侊級锛?
- *      棣栧睆鐩存帴鏄剧ず绗竴棣栨洸鐩紱榛樿 "none"锛堜笉棰勫彇锛屼氦浜掑悗鎵嶈姹傦級銆?
- *    - 绀轰緥锛?
+ * 3. "meting"（云端歌单模式）�?
+ *    - 数据源：Meting API 远端歌单（网易云 / QQ音乐 / 酷狗等）
+ *    - 特点：客户端异步按需拉取，海量曲库与封面自动解析�?
+ *    - 可�?`preload: "metadata"`：组件进入视口即预取歌单元数据（不含音频流）�?
+ *      首屏直接显示第一首曲目；默认 "none"（不预取，交互后才请求）�?
+ *    - 示例�?
  *      provider: "meting",
  *      meting: { server: "netease", type: "playlist", id: "14164869977" }
  *
- * 4. "mixed"锛堟贩鍚堝寮烘ā寮忥紝鎺ㄨ崘锛夛細
- *    - 鏁版嵁婧愶細鏈湴鏇茬洰锛坰rc/data/music.ts锛? Meting API 杩滅姝屽崟鑷姩鍚堝苟
- *    - 鐗圭偣锛氶灞忕珛鍗冲彲鎾湰鍦伴煶涔愶紝鍚庡彴鏃犳劅鎷夊彇杩滅姝屽崟骞跺湪灏辩华鍚庢棤缂濇墿瀹癸紱
- *            鑻ラ亣鏂綉鎴栦簯绔帴鍙ｆ晠闅滐紝鑷姩闈欓粯闄嶇骇涓烘湰鍦版洸鐩挱鏀撅紝缁濅笉鎶ョ孩鐮寸増銆?
- *    - 绀轰緥锛?
+ * 4. "mixed"（混合增强模式，推荐）：
+ *    - 数据源：本地曲目（src/data/music.ts�? Meting API 远端歌单自动合并
+ *    - 特点：首屏立即可播本地音乐，后台无感拉取远端歌单并在就绪后无缝扩容；
+ *            若遇断网或云端接口故障，自动静默降级为本地曲目播放，绝不报红破版�?
+ *    - 示例�?
  *      provider: "mixed",
  *      meting: { server: "netease", type: "playlist", id: "14164869977" }
- * 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+ * ─────────────────────────────────────────────────────────────────────────────
  */
 export const musicConfig: MusicConfig = withUserConfig("music", {
-	enable: true,
+	enable: false,
 	provider: "meting",
 	// tracks: [
 	// 	{
 	// 		id: "custom-1",
-	// 		title: "绀轰緥鏇茬洰",
-	// 		artist: "鑹烘湳瀹?,
+	// 		title: "示例曲目",
+	// 		artist: "艺术�?,
 	// 		cover: "/assets/music/cover/example.webp",
 	// 		source: "/assets/music/url/example.mp3",
 	// 		duration: 240,
@@ -122,7 +122,7 @@ export function clampMusicVolume(value: number, fallback = 0.7): number {
 	return Math.min(1, Math.max(0, value));
 }
 
-/** 琛ラ綈 meting 閰嶇疆鐨勯粯璁ゅ€硷紙濡?preload 榛樿 "none"锛夛紝璁?ResolvedMusicOptions 鑷寘鍚€?*/
+/** 补齐 meting 配置的默认值（�?preload 默认 "none"），�?ResolvedMusicOptions 自包含�?*/
 function resolveMetingConfig(
 	meting: MetingMusicConfig | undefined,
 ): MetingMusicConfig | undefined {
