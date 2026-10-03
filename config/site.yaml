@@ -1,0 +1,6 @@
+﻿site: "https://kumomi.de5.net/"
+base: "/"
+title: "Kumomi"
+subtitle: "Kumomi's Blog"
+lang: "zh_CN"
+timeZone: "Asia/Shanghai"
