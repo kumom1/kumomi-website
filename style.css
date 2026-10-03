@@ -1,8 +1,8 @@
 :root {
-    --bg: #ffffff;
-    --text: #111111;
-    --muted: #777777;
-    --line: #dddddd;
+    --bg: #000000;
+    --text: #ffffff;
+    --muted: #888888;
+    --line: #2a2a2a;
     --max-width: 1180px;
 }
 
@@ -177,8 +177,7 @@ a {
 
 .section-content p {
     margin-bottom: 24px;
-
-    color: #555555;
+    color: #999999;
 }
 
 .large-text {
