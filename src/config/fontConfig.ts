@@ -99,38 +99,7 @@ export const fontConfig: FontConfig = withUserConfig("font", {
 			preload: false,
 		},
 
-		// ---------------------------------------------------------------------
-		// 3. 代码等宽字体（渲染代码块与终端文本，对应 CSS 变量 --font-mono）
-		// ---------------------------------------------------------------------
-		{
-			id: "jetbrains-mono",
-			family: "JetBrains Mono",
-			role: "mono",
-			source: "fontsource",
-			variants: [
-				{
-					file: "@fontsource-variable/jetbrains-mono/index.css",
-					weight: "100 800",
-					style: "normal",
-				},
-				{
-					file: "@fontsource-variable/jetbrains-mono/wght-italic.css",
-					weight: "100 800",
-					style: "italic",
-				},
 			],
-			fallback: [
-				"ui-monospace",
-				"SFMono-Regular",
-				"Menlo",
-				"Monaco",
-				"Consolas",
-				"monospace",
-			],
-			display: "swap",
-			preload: false,
-		},
-	],
 
 	/**
 	 * 字体子集化配置（生产构建时自动从文章、i18n、配置及 Meting 歌曲中提取字符，生成极速精简版 .woff2）
