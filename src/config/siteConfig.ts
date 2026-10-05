@@ -61,6 +61,10 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 				"assets/images/banner/desktop/1.webp",
 				"assets/images/banner/desktop/2.webp",
 				"assets/images/banner/desktop/3.webp",
+				"assets/images/banner/desktop/4.webp",
+				"assets/images/banner/desktop/5.webp",
+				"assets/images/banner/desktop/6.webp",
+				"assets/images/banner/desktop/7.webp",
 			],
 			mobile: [
 				"assets/images/banner/mobile/1.webp",
@@ -68,7 +72,7 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 			],
 		},
 		// 图片裁切焦点："top"、"center" 或 "bottom"。
-		// 竖构图图片放进横向 Banner 时会被裁掉上下两端，焦点设 "top" 可保住人物头部。
+		// 桌面图都预先裁成了与横幅接近的横带，所以焦点差异很小；"top" 更稳。
 		position: "top",
 		dim: {
 			// 在图片上覆盖黑色遮罩以提高标题和顶部栏的对比度；opacity 范围为 0-1。
