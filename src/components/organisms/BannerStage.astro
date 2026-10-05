@@ -168,6 +168,7 @@ const initialMobileBanner = page === "home";
 	data-desktop-images={JSON.stringify(desktopImages)}
 	data-mobile-images={JSON.stringify(mobileImages)}
 	data-carousel-enabled={String(siteConfig.banner.carousel.enable)}
+	data-carousel-random={String(siteConfig.banner.carousel.random ?? false)}
 	data-carousel-interval={String(Math.max(siteConfig.banner.carousel.interval, 3000))}
 	data-carousel-fade-duration={String(carouselFadeDuration)}
 	data-carousel-animation={carouselAnimation}
@@ -608,9 +609,20 @@ const initialMobileBanner = page === "home";
 	// Remove the `<picture><source>` elements after the carousel takes over; otherwise, modifying `src` on the `<img>` tag at runtime will be overridden by the initial `<source>` element
 	function prepareCarouselMedia(images: string[]) {
 		if (runtime.carouselMediaPrepared || !stage || images.length < 2) return;
-		if (stage.dataset.carouselEnabled !== "true") return;
+		// 随机首图同样需要在运行时改写 `<img src>`，因此这里对「轮播」与「随机」任一开启都放行。
+		if (
+			stage.dataset.carouselEnabled !== "true" &&
+			stage.dataset.carouselRandom !== "true"
+		)
+			return;
 		stage.querySelectorAll("picture source").forEach((source) => source.remove());
 		runtime.carouselMediaPrepared = true;
+	}
+
+	/** 每次加载随机挑选的首图下标；未开启随机时恒为 0。 */
+	function resolveStartIndex(images: string[]): number {
+		if (stage?.dataset.carouselRandom !== "true" || images.length < 2) return 0;
+		return Math.floor(Math.random() * images.length);
 	}
 
 	function resolveImageUrl(src: string): string {
@@ -922,10 +934,18 @@ const initialMobileBanner = page === "home";
 
 		if (runtime.activeGroup !== state.assetGroup || themeChanged) {
 			runtime.activeGroup = state.assetGroup;
-			runtime.activeIndex = 0;
-			showImage(images[0], true);
+			const startIndex = resolveStartIndex(images);
+			runtime.activeIndex = startIndex;
+			// 随机首图与 SSR 首图不是同一张时，先隐去 SSR 首图，
+			// 等随机图解码完成再显示，避免先闪一张错的、再硬切到目标图。
+			if (startIndex !== 0) {
+				for (const layer of layers) {
+					layer.classList.remove("banner-stage__image--active");
+				}
+			}
+			showImage(images[startIndex], true);
 			layers[runtime.activeLayer]?.setAttribute("fetchpriority", "high");
-			preloadNext(images, 0);
+			preloadNext(images, startIndex);
 		}
 
 		if (state.rotate && !document.hidden) scheduleRotation(images);

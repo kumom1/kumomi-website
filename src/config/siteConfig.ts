@@ -57,11 +57,19 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 		// desktop 用于 >= 1024px；mobile 仅用于 < 1024px 的首页，手机非首页不显示壁纸。
 		// 数组顺序就是轮播顺序；只需要静态 Banner 时，每组保留一张图片即可。
 		src: {
-			desktop: ["assets/images/banner/desktop/1.webp"],
-			mobile: ["assets/images/banner/mobile/1.webp"],
+			desktop: [
+				"assets/images/banner/desktop/1.webp",
+				"assets/images/banner/desktop/2.webp",
+				"assets/images/banner/desktop/3.webp",
+			],
+			mobile: [
+				"assets/images/banner/mobile/1.webp",
+				"assets/images/banner/mobile/2.webp",
+			],
 		},
 		// 图片裁切焦点："top"、"center" 或 "bottom"。
-		position: "center",
+		// 竖构图图片放进横向 Banner 时会被裁掉上下两端，焦点设 "top" 可保住人物头部。
+		position: "top",
 		dim: {
 			// 在图片上覆盖黑色遮罩以提高标题和顶部栏的对比度；opacity 范围为 0-1。
 			enable: true,
@@ -93,9 +101,12 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 		},
 		carousel: {
 			// 是否开启多张图片自动轮播；多张图片时生效，单张图片时自动降级为静态展示。
-			enable: true,
+			enable: false,
 			// 轮播切换间隔时间（毫秒），运行时最小值限制为 3000ms。
 			interval: 6000,
+			// 每次打开网站随机挑选一张作为首图（这里设为 true 就是「每次刷新图片都不一样」）。
+			// 关闭自动轮播时效果 = 每次访问固定显示随机的一张；开启轮播时 = 从随机一张开始轮播。
+			random: true,
 			// 交叉淡入淡出（Crossfade）过渡时长（毫秒，默认 1200ms）。
 			fadeDuration: 1200,
 			// 运镜呼吸动画模式："ken-burns"（默认，循环运镜）| "zoom-in"（推进）| "zoom-out"（拉远）| "pan-left"（左移）| "pan-right"（右移）| "none"（无运镜）。

@@ -59,6 +59,8 @@ export type BannerConfig = {
 	carousel: {
 		enable: boolean;
 		interval: number;
+		/** 每次加载随机挑选首图（默认 false）。开启后首屏图片随访问变化，即使关闭轮播也生效。 */
+		random?: boolean;
 		/** 交叉淡入淡出过渡时长（毫秒，默认 1200） */
 		fadeDuration?: number;
 		/** 运镜呼吸动画模式："ken-burns"（默认，序列运镜）| "zoom-in" | "zoom-out" | "pan-left" | "pan-right" | "none" */
